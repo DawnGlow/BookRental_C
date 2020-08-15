@@ -33,4 +33,4 @@ void studentmenu();//검색, 대여, 반납 메뉴를 출력하고 입력받는 함수
 void search();//책을 검색하는 함수
 void bookrent();//책을 대여하는 함수
 void bookreturn();//책을 반납하는 함수	
-
+void password();//관리자 비밀번호를 검사하는 함수

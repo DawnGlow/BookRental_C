@@ -6,6 +6,7 @@ int main(void)
 {
 	int selectmode();
 	if (selectmode() == 2) {
+		password();
 		printf("관리자 모드를 실행합니다\n");
 		adminmenu();
 	}

@@ -25,3 +25,44 @@ void adminmenu()
 	else
 		listdelete();
 }
+
+void password()
+{
+    int temppassword;
+    int password;
+    int i;
+    printf("비밀번호를 입력해주세요\n");
+    scanf_s("%d", &password);
+    i = 0;
+    temppassword = password;
+    while (1)
+    {
+        temppassword /= 10;
+        i++;
+        if (!temppassword)
+        {
+            break;
+        }
+    }
+    if ((i) > 8)
+        printf("비밀번호가 8자리를 초과하였습니다\n");
+    while (password != 12345678)
+    {
+        printf("비밀번호가 일치하지 않습니다\n");
+        printf("비밀번호를 입력해주세요\n");
+        scanf_s("%d", &password);
+        i = 0;
+        temppassword = password;
+        while (1)
+        {
+            temppassword /= 10;
+            i++;
+            if (!temppassword)
+            {
+                break;
+            }
+        }
+        if ((i) > 8)
+            printf("비밀번호가 8자리를 초과하였습니다\n");
+    }
+}
