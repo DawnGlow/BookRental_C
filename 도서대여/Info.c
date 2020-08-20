@@ -1,6 +1,11 @@
+#define _CRT_SECURE_NO_WARNIGS
 #include "Info.h"
 #include <stdio.h>
 #include <time.h>
+
+void clearBuffer(void) {
+    while (getchar() != '\n');
+}
 
 int selectmode()
 {
@@ -65,4 +70,22 @@ void password()
         if ((i) > 8)
             printf("비밀번호가 8자리를 초과하였습니다\n");
     }
+}
+
+void listload()
+{
+    bookinfo b[30] = { 0, };
+    FILE* fp = fopen("bookinfo.txt", "r");
+    for (int i = 0; i < 3; i++)
+    {
+        fgets(b[i].title, 50, fp);
+        fgets(b[i].ISBN, 10, fp);
+        fgets(b[i].author, 20, fp);
+        fgets(b[i].publishhouse, 20, fp);
+        fgets(b[i].publishyear, 20, fp);
+        fgets(b[i].category, 10, fp);
+        fgets(b[i].land, 10, fp);
+    }
+    fclose(fp);
+
 }

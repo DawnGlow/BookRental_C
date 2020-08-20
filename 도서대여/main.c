@@ -4,6 +4,7 @@
 
 int main(void)
 {
+	listload();
 	int selectmode();
 	if (selectmode() == 2) {
 		password();

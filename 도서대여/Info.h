@@ -4,12 +4,12 @@
 #include <stdbool.h>
 typedef struct _bookinfo {
 	char title[50];				//책 제목
-	int ISBN;				//일련번호
+	char ISBN[10];				//일련번호
 	char author[20];				//저자
 	char publishhouse[20];				//출판사
-	int publishyear;				//출판년도
-	int category;				//카테고리
-	bool land;				//대출가능여부
+	char publishyear[10];				//출판년도
+	char category[10];				//카테고리
+	char land[10];				//대출가능여부
 } bookinfo;
 
 typedef struct _studentinfo {
@@ -34,3 +34,5 @@ void search();//책을 검색하는 함수
 void bookrent();//책을 대여하는 함수
 void bookreturn();//책을 반납하는 함수	
 void password();//관리자 비밀번호를 검사하는 함수
+void clearBuffer();
+void listload();
