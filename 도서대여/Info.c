@@ -145,6 +145,7 @@ void listdelete()
         }
     }
     printf("삭제하였습니다\n");
+    free(arr);
     //아래 코드는 테스트용 코드입니다.
     for (int i = 0; i < 3; i++)
     {
