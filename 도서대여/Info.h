@@ -10,9 +10,11 @@ typedef struct _bookinfo {
 	char publishyear[10];				//출판년도
 	char category[10];				//카테고리
 	char land[10];				//대출가능여부
+	char studentnum[8];
+	char timestamp[10];
 } bookinfo;
 
-typedef struct _studentinfo {
+/*typedef struct _studentinfo {
 	int studentnum;				//학번
 	struct _rentinfo {
 		int ISBN;				//일련번호
@@ -20,7 +22,7 @@ typedef struct _studentinfo {
 		int timestamp;		//대출일 타임스탬프
 	};
 
-} studentinfo;
+} studentinfo;*/
 
 int selectmode();//관리자모드와 학생모드 중 하나를 입력 받아 메인함수에 리턴하는 함수
 void adminmenu();//관리자모드에서 추가,삭제 메뉴를 출력하고 입력받는 함수
@@ -36,3 +38,4 @@ void bookreturn();//책을 반납하는 함수
 void password();//관리자 비밀번호를 검사하는 함수
 void clearBuffer();
 void listload();
+void listwrite();

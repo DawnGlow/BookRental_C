@@ -29,10 +29,11 @@ void adminmenu()
 	printf("1. 도서 추가\n");
 	printf("2. 도서 삭제\n");
 	scanf_s("%d", &b);
-	if (b == 1)
-		listadd();
-	else
-		listdelete();
+    if (b == 1)
+        listadd();
+    else
+        listdelete();
+
 }
 
 void password()
@@ -128,7 +129,14 @@ void listadd()
         }
         else
             continue;
+
     }
+    printf("도서 목록을 출력합니다.\n");
+    for (int i = 0; i < 3; i++)
+    {
+        printf("%s %s %s %s %s %s %s\n", b[i].title, b[i].ISBN, b[i].author, b[i].publishhouse, b[i].publishyear, b[i].category, b[i].land);
+    }
+    printf("올바르게 추가했는지 확인하십시오.\n");
 
 }
 
@@ -146,9 +154,22 @@ void listdelete()
     }
     printf("삭제하였습니다\n");
     free(arr);
-    //아래 코드는 테스트용 코드입니다.
+    printf("도서 목록을 출력합니다.\n");
     for (int i = 0; i < 3; i++)
     {
         printf("%s %s %s %s %s %s %s\n", b[i].title, b[i].ISBN, b[i].author, b[i].publishhouse, b[i].publishyear, b[i].category, b[i].land);
     }
+    printf("올바르게 삭제했는지 확인하십시오.\n");
+}
+void listwrite()
+{
+    FILE* fp = fopen("bookinfo.txt", "wt");
+    for (int i = 0; i < 3; i++)
+    {
+        if (strlen(b[i].title) != 0)
+            fwrite(&b[i], sizeof(b[i]), 1, fp);
+        else
+            continue;
+    }
+    fclose(fp);
 }

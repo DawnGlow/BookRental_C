@@ -10,6 +10,7 @@ int main(void)
 		password();
 		printf("관리자 모드를 실행합니다\n");
 		adminmenu();
+		listwrite();
 	}
 	else {
 		printf("학생 모드를 실행합니다\n");
