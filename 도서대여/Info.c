@@ -4,9 +4,11 @@
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
+#include <windows.h>
+#define MAX 100
 #pragma warning(disable : 4996)
 bookinfo b[30] = { 0, };
-
+typedef struct tm tm;
 void clearBuffer(void) {
     while (getchar() != '\n');
 }
@@ -95,6 +97,8 @@ void listload()
         fgets(b[i].publishyear, 20, fp);
         fgets(b[i].category, 10, fp);
         fgets(b[i].land, 10, fp);
+        fgets(b[i].studentnum, 8, fp);
+        fgets(b[i].timestamp, 10, fp);
     }
     fclose(fp);
 
@@ -173,3 +177,155 @@ void listwrite()
     }
     fclose(fp);
 }
+void studentmenu()
+{
+    int studentnumber;
+    int num_len = 0;
+    int p = 1;
+    int choice;
+    int cnt = 0;
+    char* studentnum;
+    char* n[10];
+    FILE* fp = NULL;
+
+    fp = fopen("studentnum.txt", "r");
+    if (fp == NULL)
+    {
+        fprintf(stderr, "파일출력에러!\n");
+        exit(1);
+    }
+
+    for (int i = 0; i < 10; i++)
+    {
+        studentnum = (char*)malloc(sizeof(char) * MAX);
+        fgets(studentnum, MAX, fp);
+        n[i] = studentnum;
+    }
+
+    fclose(fp);
+
+    printf("학번을 입력해 주세요: ");
+    scanf("%d", &studentnumber);
+    while (studentnumber > p)
+    {
+        p *= 10;
+        num_len++;
+    }
+    while (num_len != 8)
+    {
+        p = 1;
+        num_len = 0;
+        printf("입력하신 수의 자리수가 8자리보다 크거나 작습니다.\n");
+        printf("학번을 다시 입력해 주세요: ");
+        scanf("%d", &studentnumber);
+        while (studentnumber > p)
+        {
+            p *= 10;
+            num_len++;
+        }
+    }
+
+    for (int i = 0; i < 10; i++)
+    {
+        if (studentnumber != (atoi(n[i])))
+            cnt++;
+        else
+            continue;
+    }
+    if (cnt == 10)
+        printf("학번을 잘못입력하셨습니다\n");
+    while (cnt == 10)
+    {
+        cnt = 0;
+        printf("학번을 다시 입력해주세요: ");
+        scanf("%d", &studentnumber);
+        p = 1;
+        num_len = 0;
+        while (studentnumber > p)
+        {
+            p *= 10;
+            num_len++;
+        }
+        while (num_len != 8)
+        {
+            p = 1;
+            num_len = 0;
+            printf("입력하신 수의 자리수가 8자리보다 크거나 작습니다.\n");
+            printf("학번을 다시 입력해 주세요: ");
+            scanf("%d", &studentnumber);
+            while (studentnumber > p)
+            {
+                p *= 10;
+                num_len++;
+            }
+        }
+        for (int i = 0; i < 10; i++)
+        {
+            if (studentnumber != (atoi(n[i])))
+                cnt++;
+            else
+                continue;
+        }
+        if (cnt == 10)
+            printf("학번을 잘못입력하셨습니다\n");
+    }
+    for (int i = 0; i < 10; i++)
+        free(n[i]);
+    printf("학생모드에 접속했습니다\n");
+    printf("1. 도서 검색\n");
+    printf("2. 도서 대출\n");
+    printf("3. 도서 반납\n");
+    printf("수행하실 작업을 선택(숫자입력)해주세요: ");
+    scanf("%d", &choice);
+ /*   if (choice == 1)
+        booksearch();
+    else if (choice == 2)
+        bookrent(studentnumber);
+    else if (choice == 3)
+        bookreturn(studentnumber);
+    else
+        printf("메뉴 번호를 잘못 입력하셨습니다\n");
+        */
+}
+
+void booksearch()
+{
+    int user_input, i = 0;
+    char user_search[30];
+    system("cls");
+    printf("책 검색하기\n");
+    printf("어느 것으로 검색 할 것인가요?\n");
+    printf("1. 책 제목 검색\n");
+    printf("2. 지은이 검색\n");
+    printf("3. 출판사 검색\n");
+
+    scanf_s("%d", &user_input);
+    system("cls");
+
+    printf("검색할 단어를 입력해주세요 : ");
+    scanf_s("%s", user_search, sizeof(user_search));
+    system("cls");      //화면 지우기
+
+
+}
+
+void bookrent(int s_num)
+{
+    int bp;
+    time_t ltime;
+    tm* today;
+    time(&ltime);
+    today = (localtime(&ltime));
+
+}
+/*    printf("대출하실 책의 일련번호(ISBN)를 입력해주세요: ");
+    scanf("%d", &num);
+    for (int i = 0; i < 3; i++)
+    {
+        char* ptr1 = &b[i].studentnum;
+        while (atoi(b[i].ISBN) == num)
+        {
+
+        }
+    }
+}*/
