@@ -39,3 +39,4 @@ void password();//관리자 비밀번호를 검사하는 함수
 void clearBuffer();
 void listload();
 void listwrite();
+void allsearch(char *m, char *n);// 구조체 배열포인터를 받아서 비교하는 함수

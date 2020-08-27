@@ -7,7 +7,8 @@
 #include <windows.h>
 #define MAX 100
 #pragma warning(disable : 4996)
-bookinfo b[30] = { 0, };
+bookinfo b[3] = { 0, };
+
 typedef struct tm tm;
 void clearBuffer(void) {
     while (getchar() != '\n');
@@ -277,9 +278,9 @@ void studentmenu()
     printf("3. 도서 반납\n");
     printf("수행하실 작업을 선택(숫자입력)해주세요: ");
     scanf("%d", &choice);
- /*   if (choice == 1)
+    if (choice == 1)
         booksearch();
-    else if (choice == 2)
+   /* else if (choice == 2)
         bookrent(studentnumber);
     else if (choice == 3)
         bookreturn(studentnumber);
@@ -290,23 +291,61 @@ void studentmenu()
 
 void booksearch()
 {
-    int user_input, i = 0;
+    int user_input;
     char user_search[30];
+
     system("cls");
     printf("책 검색하기\n");
     printf("어느 것으로 검색 할 것인가요?\n");
     printf("1. 책 제목 검색\n");
     printf("2. 지은이 검색\n");
     printf("3. 출판사 검색\n");
+    printf("4. 분야별 검색\n");
+    printf("5. 대출 가능 여부별 검색(대출가능/대출불가)\n");
 
-    scanf_s("%d", &user_input);
+    scanf("%d", &user_input);
     system("cls");
 
     printf("검색할 단어를 입력해주세요 : ");
     scanf_s("%s", user_search, sizeof(user_search));
     system("cls");      //화면 지우기
+    if (user_input == 1) 
+    {
+        allsearch(b[0].title, user_search);
+    }
+    else if (user_input == 2)
+    {
+        allsearch(b[0].author, user_search);
+    }
+    else if (user_input == 3)
+    {
+        allsearch(b[0].publishhouse, user_search);
+    }
+    else if (user_input == 4)
+    {
+        allsearch(b[0].category, user_search);
+    }
+    else if (user_input == 5)
+    {
+        allsearch(b[0].land, user_search);
+    }
+    else {
+        system("cls");
+        printf("다시 입력해주세요");
+        Sleep(2000);
+        system("cls");   //화면 지우기
+    }
 
+}
 
+void allsearch(char* m, char* n)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        char* ptr = strstr(m + i * sizeof(b[0]), n);
+        if (ptr != NULL)
+            printf("%s %s %s %s %s %s %s\n", b[i].title, b[i].ISBN, b[i].author, b[i].publishhouse, b[i].publishyear, b[i].category, b[i].land);
+    }
 }
 
 void bookrent(int s_num)
