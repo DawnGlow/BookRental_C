@@ -1,3 +1,2 @@
 ﻿  Info.c
-C:\Bookrental\Bookrental\도서대여\Info.c(353,9): warning C4101: 'bp' :참조되지 않은 지역 변수입니다.
   도서대여.vcxproj -> C:\Bookrental\Bookrental\Debug\도서대여.exe

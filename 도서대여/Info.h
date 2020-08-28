@@ -10,7 +10,7 @@ typedef struct _bookinfo {
 	char publishyear[10];				//출판년도
 	char category[10];				//카테고리
 	char land[10];				//대출가능여부
-	char studentnum[8];
+	char studentnum[12];
 	char timestamp[10];
 } bookinfo;
 
@@ -33,8 +33,8 @@ int returnday();// 하루마다 반납까지 남은 일수(day)를 감소시키고 대여 정보(day)�
 char returntitle();//대여 정보(title)를 s_rentinfo함수에 전달하는 함수
 void studentmenu();//검색, 대여, 반납 메뉴를 출력하고 입력받는 함수
 void booksearch();//책을 검색하는 함수
-void bookrent(int s_num);//책을 대여하는 함수
-void bookreturn(int s_num);//책을 반납하는 함수	
+void bookrent(int studentnumber);//책을 대여하는 함수
+void bookreturn(int studentnumber);//책을 반납하는 함수	
 void password();//관리자 비밀번호를 검사하는 함수
 void clearBuffer();
 void listload();
