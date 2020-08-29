@@ -8,35 +8,44 @@
 #define MAX 100
 #pragma warning(disable : 4996)
 bookinfo b[3] = { 0, };
-
+char* landinfo = "대여중\n";
+char* landinfo2 = "대여가능\n";
+char* landinfo3 = "대여불가\n";
 typedef struct tm tm;
-void clearBuffer(void) {
+void clearBuffer(void) 
+{
     while (getchar() != '\n');
 }
 
-int selectmode()
+int adminmenu()
 {
-	int a;
-	printf("도서 대여 시스템에 접속합니다\n");
-	printf("수행하실 작업 모드를 선택해주세요\n");
-	printf("1. 학생(대출, 반납, 도서 검색)\n");
-	printf("2. 관리자(도서 list 추가, 삭제)\n");
-	scanf_s("%d", &a);
-	return a;
-}
-
-void adminmenu()
-{
-	int b;
-	printf("수행하실 작업을 선택해주세요\n");
-	printf("1. 도서 추가\n");
-	printf("2. 도서 삭제\n");
-	scanf_s("%d", &b);
-    if (b == 1)
-        listadd();
-    else
-        listdelete();
-
+    while (1)
+    {
+        int b;
+        printf("----------------------------------------\n");
+        printf("수행하실 작업을 선택해주세요\n");
+        printf("0. 메인 메뉴로 돌아가기\n");
+        printf("1. 도서 추가\n");
+        printf("2. 도서 삭제\n");
+        printf("3. 프로그램 종료\n");
+        printf("----------------------------------------\n");
+        scanf("%d", &b);
+        switch (b)
+        {
+        case 1:
+            listadd();
+            break;
+        case 2:
+            listdelete();
+            break;
+        case 0:
+            return 0;
+        case 3:
+            exit(1);
+        default:
+            printf("메뉴 번호를 잘못 입력하셨습니다\n");
+        }
+    }
 }
 
 void password()
@@ -83,7 +92,7 @@ void password()
 void listload()
 {
     printf("bookinfo.txt에서 책 정보를 가져오는 중입니다\n");
-    FILE* fp = fopen("bookinfo.txt", "r");
+    FILE* fp = fopen("bookinfo.txt", "rt");
     if (fp == NULL)
     {
         printf("파일을 불러오는데 실패하였습니다\n");
@@ -102,7 +111,6 @@ void listload()
         fgets(b[i].timestamp, 10, fp);
     }
     fclose(fp);
-
 }
 
 void listadd()
@@ -134,7 +142,7 @@ void listadd()
         }
         else
             continue;
-
+        
     }
     printf("도서 목록을 출력합니다.\n");
     for (int i = 0; i < 3; i++)
@@ -142,7 +150,8 @@ void listadd()
         printf("%s %s %s %s %s %s %s\n", b[i].title, b[i].ISBN, b[i].author, b[i].publishhouse, b[i].publishyear, b[i].category, b[i].land);
     }
     printf("올바르게 추가했는지 확인하십시오.\n");
-
+    printf("bookinfo.txt에 추가된 책 정보를 저장합니다\n");
+    listwrite();
 }
 
 void listdelete()
@@ -159,31 +168,34 @@ void listdelete()
     }
     printf("삭제하였습니다\n");
     free(arr);
+    printf("해당 도서 정보를 bookinfo.txt에서 삭제합니다.\n");
     printf("도서 목록을 출력합니다.\n");
     for (int i = 0; i < 3; i++)
     {
         printf("%s %s %s %s %s %s %s\n", b[i].title, b[i].ISBN, b[i].author, b[i].publishhouse, b[i].publishyear, b[i].category, b[i].land);
     }
     printf("올바르게 삭제했는지 확인하십시오.\n");
+    listwrite();
 }
 void listwrite()
 {
     FILE* fp = fopen("bookinfo.txt", "wt");
     for (int i = 0; i < 3; i++)
     {
-        if (strlen(b[i].title) != 0)
-            fwrite(&b[i], sizeof(b[i]), 1, fp);
+        if (strlen(b[i].title) != 0) 
+        {
+            fprintf(fp, "%s%s%s%s%s%s%s%s%s", b[i].title, b[i].ISBN, b[i].author, b[i].publishhouse, b[i].publishyear, b[i].category, b[i].land, b[i].studentnum, b[i].timestamp);
+        }
         else
             continue;
     }
     fclose(fp);
 }
-void studentmenu()
+int studentmenu()
 {
     int studentnumber;
     int num_len = 0;
     int p = 1;
-    int choice;
     int cnt = 0;
     char* studentnum;
     char* n[10];
@@ -273,19 +285,37 @@ void studentmenu()
     for (int i = 0; i < 10; i++)
         free(n[i]);
     printf("학생모드에 접속했습니다\n");
-    printf("1. 도서 검색\n");
-    printf("2. 도서 대출\n");
-    printf("3. 도서 반납\n");
-    printf("수행하실 작업을 선택(숫자입력)해주세요: ");
-    scanf("%d", &choice);
-    if (choice == 1)
-        booksearch();
-    else if (choice == 2)
-        bookrent(studentnumber);
-    else if (choice == 3)
-        bookreturn(studentnumber);
-    else
-        printf("메뉴 번호를 잘못 입력하셨습니다\n");    
+    while (1) 
+    {
+        int choice;
+        printf("----------------------------------------\n");
+        printf("0. 메인 메뉴로 돌아가기\n");
+        printf("1. 도서 검색\n");
+        printf("2. 도서 대출\n");
+        printf("3. 도서 반납\n");
+        printf("4. 프로그램 종료\n");
+        printf("----------------------------------------\n");
+        printf("수행하실 작업을 선택(숫자입력)해주세요: ");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 1:
+            booksearch();
+            break;
+        case 2:
+            bookrent(studentnumber);
+            break;
+        case 3:
+            bookreturn(studentnumber);
+            break;
+        case 0:
+            return 0;
+        case 4:
+            exit(1);
+        default:
+            printf("메뉴 번호를 잘못 입력하셨습니다\n");
+        }
+    };
 }
 
 void booksearch()
@@ -300,7 +330,7 @@ void booksearch()
     printf("2. 지은이 검색\n");
     printf("3. 출판사 검색\n");
     printf("4. 분야별 검색\n");
-    printf("5. 대출 가능 여부별 검색(대출가능/대출불가)\n");
+    printf("5. 대출 가능 여부별 검색(대여가능/대여중/대여불가)\n");
 
     scanf("%d", &user_input);
     system("cls");
@@ -352,7 +382,6 @@ void bookrent(int studentnumber)
     int num;
     int p2 = 1;
     int isbnlen = 0;
-    char* landinfo = "대여중\n";
     time_t start_t;
     start_t = time(NULL);
     int exeday = (int)start_t / 86400;
@@ -364,17 +393,20 @@ void bookrent(int studentnumber)
             if ((exeday - atoi(b[i].timestamp)) < 7)
             {
                 printf("미납 상태인 책 정보를 출력합니다\n");
-                printf("%s %s %s %s %s %s %s 반납일까지 남은 일 수: %d\n", b[i].title, b[i].ISBN, b[i].author, b[i].publishhouse, b[i].publishyear, b[i].category, b[i].land, 7 - (exeday - atoi(b[i].timestamp)));
+                printf("제목: %s ISBN: %s 저자: %s 반납일까지 남은 일 수: %d\n", b[i].title, b[i].ISBN, b[i].author, 7 - (exeday - atoi(b[i].timestamp)));
+                printf("\n");
             }
             else if ((exeday - atoi(b[i].timestamp)) == 7)
             {
                 printf("오늘 반납 해야할 책 정보를 출력합니다\n");
-                printf("%s %s %s %s %s %s %s\n", b[i].title, b[i].ISBN, b[i].author, b[i].publishhouse, b[i].publishyear, b[i].category, b[i].land);
+                printf("제목: %s ISBN: %s 저자: %s\n", b[i].title, b[i].ISBN, b[i].author);
+                printf("\n");
             }
             else if ((exeday - atoi(b[i].timestamp)) > 7)
             {
                 printf("연채 상태인 책 정보를 출력합니다\n");
-                printf("%s %s %s %s %s %s %s 연채 일 수: %d\n", b[i].title, b[i].ISBN, b[i].author, b[i].publishhouse, b[i].publishyear, b[i].category, b[i].land, exeday - atoi(b[i].timestamp)-7);
+                printf("제목: %s ISBN: %s 저자: %s 연채 일 수: %d\n", b[i].title, b[i].ISBN, b[i].author, exeday - atoi(b[i].timestamp)-7);
+                printf("\n");
             }
 
         }
@@ -401,31 +433,42 @@ void bookrent(int studentnumber)
              isbnlen++;
          }
      }
-
+     int rentfail;
      for (int i = 0; i < 3; i++)
      {
          if (atoi(b[i].ISBN) == num)
          {
-             itoa(studentnumber, b[i].studentnum, 10);
-             time_t t;
-             t = time(NULL);
-             int daytime = (int)t / 86400;
-             itoa(daytime, b[i].timestamp, 10);
-             memset(&b[i].land, 0, sizeof(b[0].land));
-             strcpy(b[i].land, landinfo);
-             printf("%s대출에 성공하였습니다\n", b[i].title);
+             if (strcmp(b[i].land, landinfo) == 0 || strcmp(b[i].land, landinfo3) == 0)
+             {
+                 printf("대출 불가능한 도서입니다\n");
+                 rentfail = 1;
+             }
+             else 
+             {
+                 itoa(studentnumber, b[i].studentnum, 10);
+                 time_t t;
+                 t = time(NULL);
+                 int daytime = (int)t / 86400;
+                 itoa(daytime, b[i].timestamp, 10);
+                 memset(&b[i].land, 0, sizeof(b[0].land));
+                 strcpy(b[i].land, landinfo);
+                 printf("%s대출에 성공하였습니다\n", b[i].title);
+             }
          }
      }
-
+     if (rentfail != 1)
+     {
+         printf("bookinfo.txt에 저장중입니다\n");
+         listwrite();
+         printf("저장이 완료되었습니다\n");
+     }
 }
-void bookreturn(studentnumber)
+void bookreturn(int studentnumber)
 {
     int num;
     int p2 = 1;
     int isbnlen = 0;
     int returnnum;
-    char* landinfo = "대여중\n";
-    char* landinfo2 = "대여가능\n";
     time_t start_t;
     start_t = time(NULL);
     int exeday = (int)start_t / 86400;
@@ -437,17 +480,20 @@ void bookreturn(studentnumber)
             if ((exeday - atoi(b[i].timestamp)) < 7)
             {
                 printf("미납 상태인 책 정보를 출력합니다\n");
-                printf("%s %s %s %s %s %s %s 반납일까지 남은 일 수: %d\n", b[i].title, b[i].ISBN, b[i].author, b[i].publishhouse, b[i].publishyear, b[i].category, b[i].land, 7 - (exeday - atoi(b[i].timestamp)));
+                printf("제목: %s ISBN: %s 저자: %s 반납일까지 남은 일 수: %d\n", b[i].title, b[i].ISBN, b[i].author, 7 - (exeday - atoi(b[i].timestamp)));
+                printf("\n");
             }
             else if ((exeday - atoi(b[i].timestamp)) == 7)
             {
                 printf("오늘 반납 해야할 책 정보를 출력합니다\n");
-                printf("%s %s %s %s %s %s %s\n", b[i].title, b[i].ISBN, b[i].author, b[i].publishhouse, b[i].publishyear, b[i].category, b[i].land);
+                printf("제목: %s ISBN: %s 저자: %s\n", b[i].title, b[i].ISBN, b[i].author);
+                printf("\n");
             }
             else if ((exeday - atoi(b[i].timestamp)) > 7)
             {
                 printf("연채 상태인 책 정보를 출력합니다\n");
-                printf("%s %s %s %s %s %s %s 연채 일 수: %d\n", b[i].title, b[i].ISBN, b[i].author, b[i].publishhouse, b[i].publishyear, b[i].category, b[i].land, exeday - atoi(b[i].timestamp) - 7);
+                printf("제목: %s ISBN: %s 저자: %s 연채 일 수: %d\n", b[i].title, b[i].ISBN, b[i].author, exeday - atoi(b[i].timestamp) - 7);
+                printf("\n");
             }
 
         }
@@ -455,7 +501,7 @@ void bookreturn(studentnumber)
     printf("반납하실 책 권수를 입력해주세요\n");
     scanf("%d", &returnnum);
     for (int i = 0; i < returnnum; i++) {
-
+        intersection:
         printf("반납하실 책의 일련번호(ISBN)를 입력해주세요: ");
         scanf("%d", &num);
         while (num > p2)
@@ -476,6 +522,15 @@ void bookreturn(studentnumber)
                 isbnlen++;
             }
         }
+        for (int i = 0; i < 3; i++) 
+        {
+            if (atoi(b[i].ISBN) == num && atoi(b[i].studentnum) != studentnumber)
+            {
+                printf("본인이 대여하지 않은 도서입니다\n");
+                goto intersection;
+            }
+        }
+        
         for (int i = 0; i < 3; i++)
         {
             if (atoi(b[i].ISBN) == num)
@@ -489,4 +544,7 @@ void bookreturn(studentnumber)
             }
         }
     }
+    printf("bookinfo.txt에 저장중입니다\n");
+    listwrite();
+    printf("저장이 완료되었습니다\n");
 }
