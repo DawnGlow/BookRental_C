@@ -1,13 +1,15 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
-#include <time.h>
+#include <string.h>
+#include <windows.h>
 #include "Info.h"
 
 int main(void)
 {
-	
+	bookinfo b[3] = { 0, };
 	while (1)
 	{
+		memset(b, 0, sizeof(b));
 		listload();
 		printf("----------------------------------------\n");
 		int a;
@@ -30,6 +32,7 @@ int main(void)
 			return 0;
 		default:
 			printf("잘못입력하셨습니다\n");
+			exit(1);
 		}
 
 	}

@@ -6,12 +6,16 @@
 #include <string.h>
 #include <windows.h>
 #define MAX 100
+#define BooknumMax 3
 #pragma warning(disable : 4996)
-bookinfo b[3] = { 0, };
 char* landinfo = "대여중\n";
 char* landinfo2 = "대여가능\n";
 char* landinfo3 = "대여불가\n";
+char* line = "\n";
+int booklistnum = 0;
+int booklistnum2 = 0;
 typedef struct tm tm;
+bookinfo b[3];
 void clearBuffer(void) 
 {
     while (getchar() != '\n');
@@ -19,6 +23,7 @@ void clearBuffer(void)
 
 int adminmenu()
 {
+    password();
     while (1)
     {
         int b;
@@ -115,26 +120,37 @@ void listload()
 
 void listadd()
 {
+    int addcount = 0;
     for (int i = 0; i < 3; i++) {
         if (strlen(b[i].title) == 0)
         {
             int k;
             printf("제목 입력 : \n");
+            clearBuffer();
             gets_s(b[i].title, sizeof(b[i].title));
+            strcat(b[i].title, line);
             printf("ISBN 입력 : \n");
             gets_s(b[i].ISBN, sizeof(b[i].ISBN));
+            strcat(b[i].ISBN, line);
             printf("작가 입력 : \n");
             gets_s(b[i].author, sizeof(b[i].author));
+            strcat(b[i].author, line);
             printf("출판사 입력 : \n");
             gets_s(b[i].publishhouse, sizeof(b[i].publishhouse));
+            strcat(b[i].publishhouse, line);
             printf("출판년도 입력 : \n");
             gets_s(b[i].publishyear, sizeof(b[i].publishyear));
+            strcat(b[i].publishyear, line);
             printf("카테고리 입력 : \n");
             gets_s(b[i].category, sizeof(b[i].category));
-            printf("대출가능여부 입력 : \n");
+            strcat(b[i].category, line);
+            printf("대여가능여부 입력(대여가능/대여불가) : \n");
             gets_s(b[i].land, sizeof(b[i].land));
-
-            printf("%d번째 책 등록에 성공했습니다. 관리자 메뉴로 돌아가려면 1번을 입력해주세요, 계속 등록하려면 1번을 제외한 아무 문자를 입력해주세요\n", i + 1);
+            strcat(b[i].land, line);
+            strcpy(b[i].studentnum, line);
+            strcpy(b[i].timestamp, line);
+            addcount++;
+            printf("%d인덱스에 책 등록을 성공했습니다. 관리자 메뉴로 돌아가려면 1번을 입력해주세요, 계속 등록하려면 1번을 제외한 아무 문자를 입력해주세요\n", i + 1);
             scanf("%d", &k);
             if (k == 1)
                 break;
@@ -144,14 +160,19 @@ void listadd()
             continue;
         
     }
-    printf("도서 목록을 출력합니다.\n");
-    for (int i = 0; i < 3; i++)
+    if (addcount == 0)
+        printf("리스트에 더이상 책 등록을 하실 수 없습니다.\n");
+    else
     {
-        printf("%s %s %s %s %s %s %s\n", b[i].title, b[i].ISBN, b[i].author, b[i].publishhouse, b[i].publishyear, b[i].category, b[i].land);
+        printf("도서 목록을 출력합니다.\n");
+        for (int i = 0; i < 3; i++)
+        {
+            printf("%s %s %s %s %s %s %s\n", b[i].title, b[i].ISBN, b[i].author, b[i].publishhouse, b[i].publishyear, b[i].category, b[i].land);
+        }
+        printf("올바르게 추가했는지 확인하십시오.\n");
+        printf("bookinfo.txt에 추가된 책 정보를 저장합니다\n");
+        listwrite();
     }
-    printf("올바르게 추가했는지 확인하십시오.\n");
-    printf("bookinfo.txt에 추가된 책 정보를 저장합니다\n");
-    listwrite();
 }
 
 void listdelete()
@@ -412,7 +433,7 @@ void bookrent(int studentnumber)
         }
     }
 
-
+    rentsection:
      printf("대출하실 책의 일련번호(ISBN)를 입력해주세요: ");
      scanf("%d", &num);
      while (num > p2)
@@ -433,7 +454,21 @@ void bookrent(int studentnumber)
              isbnlen++;
          }
      }
-     int rentfail;
+
+     for (int i = 0; i < BooknumMax; i++)
+     {
+         if (atoi(b[i].ISBN) != num)
+             booklistnum2++;
+     }
+     if (booklistnum2 == 3)
+     {
+         printf("도서 리스트에 없는 일련번호(ISBN)을 입력하셨습니다\n");
+         p2 = 1;
+         isbnlen = 0;
+         booklistnum2 = 0;
+         goto rentsection;
+     }
+     int rentfail = 0;
      for (int i = 0; i < 3; i++)
      {
          if (atoi(b[i].ISBN) == num)
@@ -446,10 +481,12 @@ void bookrent(int studentnumber)
              else 
              {
                  itoa(studentnumber, b[i].studentnum, 10);
+                 strcat(b[i].studentnum, line);
                  time_t t;
                  t = time(NULL);
                  int daytime = (int)t / 86400;
                  itoa(daytime, b[i].timestamp, 10);
+                 strcat(b[i].timestamp, line);
                  memset(&b[i].land, 0, sizeof(b[0].land));
                  strcpy(b[i].land, landinfo);
                  printf("%s대출에 성공하였습니다\n", b[i].title);
@@ -461,6 +498,8 @@ void bookrent(int studentnumber)
          printf("bookinfo.txt에 저장중입니다\n");
          listwrite();
          printf("저장이 완료되었습니다\n");
+         memset(b, 0, sizeof(b));
+         listload();
      }
 }
 void bookreturn(int studentnumber)
@@ -469,6 +508,7 @@ void bookreturn(int studentnumber)
     int p2 = 1;
     int isbnlen = 0;
     int returnnum;
+    int checkcnt = 0;
     time_t start_t;
     start_t = time(NULL);
     int exeday = (int)start_t / 86400;
@@ -498,13 +538,26 @@ void bookreturn(int studentnumber)
 
         }
     }
+    //구조체에 저장된 책 권수를 count하는 코드
+    for (int i = 0; i < BooknumMax; i++)
+    {
+        if (strlen(b[i].title) != 0)
+            booklistnum++;
+    }
+    intersection0:
     printf("반납하실 책 권수를 입력해주세요\n");
     scanf("%d", &returnnum);
+    if (returnnum >= booklistnum) 
+    {
+        printf("입력하신 책 권수가 리스트에 저장된 책 권수보다 큽니다\n");
+        goto intersection0;
+    }
+
     for (int i = 0; i < returnnum; i++) {
-        intersection:
+    intersection:
         printf("반납하실 책의 일련번호(ISBN)를 입력해주세요: ");
         scanf("%d", &num);
-        while (num > p2)
+        while (num >= p2)
         {
             p2 *= 10;
             isbnlen++;
@@ -522,15 +575,33 @@ void bookreturn(int studentnumber)
                 isbnlen++;
             }
         }
-        for (int i = 0; i < 3; i++) 
+
+        for (int i = 0; i < 3; i++)
+        {
+            if (atoi(b[i].ISBN) != num)
+                checkcnt++;
+        }
+        if (checkcnt == 3)
+        {
+            printf("도서 리스트에 없는 책의 일련번호(ISBN)을 입력하셨습니다\n");
+            p2 = 1;
+            isbnlen = 0;
+            checkcnt = 0;
+            goto intersection;
+        }
+
+        for (int i = 0; i < 3; i++)
         {
             if (atoi(b[i].ISBN) == num && atoi(b[i].studentnum) != studentnumber)
             {
                 printf("본인이 대여하지 않은 도서입니다\n");
+                p2 = 1;
+                isbnlen = 0;
                 goto intersection;
             }
         }
-        
+
+
         for (int i = 0; i < 3; i++)
         {
             if (atoi(b[i].ISBN) == num)
@@ -544,7 +615,14 @@ void bookreturn(int studentnumber)
             }
         }
     }
-    printf("bookinfo.txt에 저장중입니다\n");
-    listwrite();
-    printf("저장이 완료되었습니다\n");
+    if (returnnum != 0)
+    {
+        printf("bookinfo.txt에 저장중입니다\n");
+        listwrite();
+        printf("저장이 완료되었습니다\n");
+        memset(b, 0, sizeof(b));
+        listload();
+    }
+    else
+        printf("반납하실 책이 없는것으로 확인하고 메뉴로 돌아갑니다\n");
 }
