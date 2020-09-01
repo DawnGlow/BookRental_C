@@ -6,14 +6,14 @@
 #include <string.h>
 #include <windows.h>
 #define MAX 100
-#define BooknumMax 3
+#define BooknumMax 30
 #define StudentnumMax 10
 #pragma warning(disable : 4996)
 char* landinfo = "대여중\n";
 char* landinfo2 = "대여가능\n";
 char* landinfo3 = "대여불가\n";
 char* line = "\n";
-bookinfo b[3];
+bookinfo b[BooknumMax];
 void clearBuffer(void) 
 {
     while (getchar() != '\n');
@@ -105,13 +105,13 @@ void listload()
     }
     for (int i = 0; i < BooknumMax; i++)
     {
-        fgets(b[i].title, 50, fp);
+        fgets(b[i].title, 100, fp);
         fgets(b[i].ISBN, 10, fp);
-        fgets(b[i].author, 20, fp);
-        fgets(b[i].publishhouse, 20, fp);
-        fgets(b[i].publishyear, 20, fp);
-        fgets(b[i].category, 10, fp);
-        fgets(b[i].land, 10, fp);
+        fgets(b[i].author, 50, fp);
+        fgets(b[i].publishhouse, 40, fp);
+        fgets(b[i].publishyear, 10, fp);
+        fgets(b[i].category, 20, fp);
+        fgets(b[i].land, 20, fp);
         fgets(b[i].studentnum, 12, fp);
         fgets(b[i].timestamp, 10, fp);
     }
@@ -349,51 +349,61 @@ int studentmenu()
     };
 }
 
-void booksearch()
+int booksearch()
 {
-    int user_input;
-    char user_search[30];
-    printf("책 검색하기\n");
-    printf("어느 것으로 검색 할 것인가요?\n");
-    printf("1. 책 제목 검색\n");
-    printf("2. 지은이 검색\n");
-    printf("3. 출판사 검색\n");
-    printf("4. 분야별 검색\n");
-    printf("5. 대출 가능 여부별 검색(대여가능/대여중/대여불가)\n");
-
-    scanf("%d", &user_input);
-    system("cls");
-    clearBuffer();
-    printf("검색할 단어를 입력해주세요 : ");
-    scanf_s("%s", user_search, sizeof(user_search));
-    system("cls");      //화면 지우기
-    if (user_input == 1) 
+    while (1)
     {
-        allsearch(b[0].title, user_search);
+        int user_input;
+        char user_search[30];
+        printf("책 검색하기\n");
+        printf("어느 것으로 검색 할 것인가요?\n");
+        printf("1. 책 제목 검색\n");
+        printf("2. 지은이 검색\n");
+        printf("3. 출판사 검색\n");
+        printf("4. 분야별 검색\n");
+        printf("5. 대출 가능 여부별 검색(대여가능/대여중/대여불가)\n");
+        printf("6. 이전 메뉴로 돌아가기\n");
+        scanf("%d", &user_input);
+        switch (user_input)
+        {
+        case 1:
+            printf("검색할 단어를 입력해주세요: ");
+            scanf("%s", &user_search);
+            allsearch(b[0].title, user_search);
+            break;
+        case 2:
+            printf("검색할 단어를 입력해주세요: ");
+            scanf("%s", &user_search);
+            allsearch(b[0].author, user_search);
+            break;
+        case 3:
+            printf("검색할 단어를 입력해주세요: ");
+            scanf("%s", &user_search);
+            allsearch(b[0].publishhouse, user_search);
+            break;
+        case 4:
+            printf("검색할 단어를 입력해주세요: ");
+            scanf("%s", &user_search);
+            allsearch(b[0].category, user_search);
+            break;
+        case 5:
+            printf("검색할 단어를 입력해주세요: ");
+            scanf("%s", &user_search);
+            allsearch(b[0].land, user_search);
+            break;
+        case 6:
+            printf("이전 메뉴로 돌아갑니다\n");
+            Sleep(1000);
+            system("cls");
+            return 0;
+        default:
+            system("cls");
+            printf("잘못입력하셨습니다\n");
+            Sleep(2000);
+            system("cls");
+            break;
+        }
     }
-    else if (user_input == 2)
-    {
-        allsearch(b[0].author, user_search);
-    }
-    else if (user_input == 3)
-    {
-        allsearch(b[0].publishhouse, user_search);
-    }
-    else if (user_input == 4)
-    {
-        allsearch(b[0].category, user_search);
-    }
-    else if (user_input == 5)
-    {
-        allsearch(b[0].land, user_search);
-    }
-    else {
-        system("cls");
-        printf("잘못입력하셨습니다\n");
-        Sleep(2000);
-        system("cls");   //화면 지우기
-    }
-
 }
 
 void allsearch(char* m, char* n)

@@ -3,10 +3,11 @@
 #include <string.h>
 #include <windows.h>
 #include "Info.h"
+#define BooknumMax 30
 
 int main(void)
 {
-	bookinfo b[3] = { 0, };
+	bookinfo b[BooknumMax] = { 0, };
 	while (1)
 	{
 		memset(b, 0, sizeof(b));
