@@ -129,8 +129,26 @@ void listadd()
             clearBuffer();
             gets_s(b[i].title, sizeof(b[i].title));
             strcat(b[i].title, line);
+            ISBNsection:
             printf("ISBN 입력 : \n");
             gets_s(b[i].ISBN, sizeof(b[i].ISBN));
+            if (strlen(b[i].ISBN) != 4)
+            {
+                printf("4자리로 구성된 ISBN을 입력해주세요\n");
+                goto ISBNsection;
+            }
+            int check = 0;
+            for (int a = 0; a < BooknumMax; a++)
+            {
+                if (atoi(b[i].ISBN) == atoi(b[a].ISBN))
+                    check++;
+            }
+            if (check != 1)
+            {
+                printf("이미 등록된 ISBN넘버입니다\n");
+                check = 0;
+                goto ISBNsection;
+            }
             strcat(b[i].ISBN, line);
             printf("작가 입력 : \n");
             gets_s(b[i].author, sizeof(b[i].author));
@@ -178,9 +196,48 @@ void listadd()
 
 void listdelete()
 {
+    int p2 = 1;
+    int isbnlen = 0;
+    int booklistnum2 = 0;
     int* arr = (int*)malloc(sizeof(int) * 4);
-    printf("ISBN을 입력해주세요(4자리) : ");
+    deletesection:
+    printf("ISBN을 입력해주세요(4자리)(이전메뉴로 돌아가려면 0을 입력해주세요) : ");
     scanf("%d", arr);
+    if ((*arr) == 0)
+        goto EXIT;
+    while ((*arr) > p2)
+    {
+        p2 *= 10;
+        isbnlen++;
+    }
+    while (isbnlen != 4)
+    {
+        p2 = 1;
+        isbnlen = 0;
+        printf("입력하신 수의 자리수가 4자리보다 크거나 작습니다.\n");
+        printf("일련번호(ISBN)를 다시 입력해 주세요(0 을 입력하면 이전 메뉴로 돌아갑니다): ");
+        scanf("%d", arr);
+        if ((*arr) == 0)
+            goto EXIT;
+        while ((*arr) > p2)
+        {
+            p2 *= 10;
+            isbnlen++;
+        }
+    }
+    for (int i = 0; i < BooknumMax; i++)
+    {
+        if (atoi(b[i].ISBN) != (*arr))
+            booklistnum2++;
+    }
+    if (booklistnum2 == BooknumMax)
+    {
+        printf("도서 리스트에 없는 일련번호(ISBN)을 입력하셨습니다\n");
+        p2 = 1;
+        isbnlen = 0;
+        booklistnum2 = 0;
+        goto deletesection;
+    }
     system("cls");
     for (int i = 0; i < BooknumMax; i++)
     {
@@ -199,6 +256,8 @@ void listdelete()
     }
     printf("올바르게 삭제했는지 확인하십시오.\n");
     listwrite();
+    EXIT:
+    printf("\n");
 }
 void listwrite()
 {
