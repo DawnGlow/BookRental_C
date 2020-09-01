@@ -363,6 +363,7 @@ int booksearch()
         printf("4. 분야별 검색\n");
         printf("5. 대출 가능 여부별 검색(대여가능/대여중/대여불가)\n");
         printf("6. 이전 메뉴로 돌아가기\n");
+        clearBuffer();
         scanf("%d", &user_input);
         switch (user_input)
         {
