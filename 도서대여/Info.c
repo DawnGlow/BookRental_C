@@ -121,6 +121,13 @@ void listload()
 void listadd()
 {
     int addcount = 0;
+    int ablecount = 0;
+    for (int i = 0; i < BooknumMax; i++) 
+    {
+        if (strlen(b[i].title) == 0)
+            ablecount++;
+    }
+    printf("현재 도서 리스트에 %d권을 추가하실수 있습니다\n", ablecount);
     for (int i = 0; i < BooknumMax; i++) {
         if (strlen(b[i].title) == 0)
         {
@@ -397,7 +404,8 @@ int studentmenu()
         case 4:
             for (int i = 0; i < BooknumMax; i++)
             {
-                printf("%s%s%s%s%s%s%s\n", b[i].title, b[i].ISBN, b[i].author, b[i].publishhouse, b[i].publishyear, b[i].category, b[i].land);
+                if(strlen(b[i].title)!=0)
+                    printf("제목: %s일련번호(ISBN): %s저자: %s출판사: %s출판년도: %s분야: %s대여정보: %s\n", b[i].title, b[i].ISBN, b[i].author, b[i].publishhouse, b[i].publishyear, b[i].category, b[i].land);
             }
             break;
         case 5:
